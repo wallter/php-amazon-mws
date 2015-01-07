@@ -1,5 +1,13 @@
 <?php
 /**
+* Class and Function List:
+* Function list:
+* - __construct()
+* Classes list:
+* - AmazonFeedsCore extends AmazonCore
+*/
+
+/**
  * Copyright 2013 CPI Group, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,33 +26,34 @@
 
 /**
  * Core class for Amazon Feeds API.
- * 
+ *
  * This is the core class for all objects in the Amazon Feeds section.
  * It contains no methods in itself other than the constructor.
  */
-abstract class AmazonFeedsCore extends AmazonCore{
+abstract class AmazonFeedsCore extends AmazonCore
+{
     /**
      * AmazonFeedsCore constructor sets up key information used in all Amazon Feeds Core requests
-     * 
+     *
      * This constructor is called when initializing all objects in the Amazon Feeds Core.
      * The parameters are passed by the child objects' constructors, which are
      * in turn passed to the AmazonCore constructor. See it for more information
      * on these parameters and common methods.
-     * @param string $s [optional] <p>Name for the store you want to use.
-     * This parameter is optional if only one store is defined in the config file.</p>
-     * @param boolean $mock [optional] <p>This is a flag for enabling Mock Mode.
-     * This defaults to <b>FALSE</b>.</p>
-     * @param array|string $m [optional] <p>The files (or file) to use in Mock Mode.</p>
-     * @param string $config [optional] <p>An alternate config file to set. Used for testing.</p>
+     * @param string       $s      [optional] <p>Name for the store you want to use.
+     *                             This parameter is optional if only one store is defined in the config file.</p>
+     * @param boolean      $mock   [optional] <p>This is a flag for enabling Mock Mode.
+     *                             This defaults to <b>FALSE</b>.</p>
+     * @param array|string $m      [optional] <p>The files (or file) to use in Mock Mode.</p>
+     * @param string       $config [optional] <p>An alternate config file to set. Used for testing.</p>
      */
-    public function __construct($s = null, $mock = false, $m = null, $config = null){
+    public function __construct($s = null, $mock = false, $m = null, $config = null)
+    {
         parent::__construct($s, $mock, $m, $config);
-        include($this->env);
-        
+        require_once $this->env;
+
         $this->urlbranch = '';
-        if(isset($AMAZON_VERSION_FEEDS)) {
+        if (isset($AMAZON_VERSION_FEEDS)) {
             $this->options['Version'] = $AMAZON_VERSION_FEEDS;
         }
     }
 }
-?>

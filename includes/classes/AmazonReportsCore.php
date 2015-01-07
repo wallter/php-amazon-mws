@@ -1,5 +1,14 @@
 <?php
 /**
+* Class and Function List:
+* Function list:
+* - __construct()
+* - checkToken()
+* Classes list:
+* - AmazonReportsCore extends AmazonCore
+*/
+
+/**
  * Copyright 2013 CPI Group, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,51 +27,53 @@
 
 /**
  * Core class for Amazon Reports API.
- * 
+ *
  * This is the core class for all objects in the Amazon Reports section.
  * It contains no methods in itself other than the constructor.
  */
-abstract class AmazonReportsCore extends AmazonCore{
+abstract class AmazonReportsCore extends AmazonCore
+{
     /**
      * AmazonReportsCore constructor sets up key information used in all Amazon Reports Core requests
-     * 
+     *
      * This constructor is called when initializing all objects in the Amazon Reports Core.
      * The parameters are passed by the child objects' constructors, which are
      * in turn passed to the AmazonCore constructor. See it for more information
      * on these parameters and common methods.
-     * @param string $s [optional] <p>Name for the store you want to use.
-     * This parameter is optional if only one store is defined in the config file.</p>
-     * @param boolean $mock [optional] <p>This is a flag for enabling Mock Mode.
-     * This defaults to <b>FALSE</b>.</p>
-     * @param array|string $m [optional] <p>The files (or file) to use in Mock Mode.</p>
-     * @param string $config [optional] <p>An alternate config file to set. Used for testing.</p>
+     * @param string       $s      [optional] <p>Name for the store you want to use.
+     *                             This parameter is optional if only one store is defined in the config file.</p>
+     * @param boolean      $mock   [optional] <p>This is a flag for enabling Mock Mode.
+     *                             This defaults to <b>FALSE</b>.</p>
+     * @param array|string $m      [optional] <p>The files (or file) to use in Mock Mode.</p>
+     * @param string       $config [optional] <p>An alternate config file to set. Used for testing.</p>
      */
-    public function __construct($s = null, $mock = false, $m = null, $config = null){
+    public function __construct($s = null, $mock = false, $m = null, $config = null)
+    {
         parent::__construct($s, $mock, $m, $config);
-        include($this->env);
-        
+        require_once $this->env;
+
         $this->urlbranch = '';
-        if(isset($AMAZON_VERSION_REPORTS)) {
+        if (isset($AMAZON_VERSION_REPORTS)) {
             $this->options['Version'] = $AMAZON_VERSION_REPORTS;
         }
     }
-    
+
     /**
      * Checks for a token and changes the proper options
-     * @param SimpleXMLObject $xml <p>response data</p>
-     * @return boolean <b>FALSE</b> if no XML data
+     * @param  SimpleXMLObject $xml <p>response data</p>
+     * @return boolean         <b>FALSE</b> if no XML data
      */
-    protected function checkToken($xml){
-        if (!$xml){
+    protected function checkToken($xml)
+    {
+        if (!$xml) {
             return false;
         }
-        if ((string)$xml->HasNext == 'true'){
+        if ((string) $xml->HasNext == 'true') {
             $this->tokenFlag = true;
-            $this->options['NextToken'] = (string)$xml->NextToken;
+            $this->options['NextToken'] = (string) $xml->NextToken;
         } else {
             unset($this->options['NextToken']);
             $this->tokenFlag = false;
         }
     }
 }
-?>

@@ -1,5 +1,6 @@
-phpAmazonMWS
+PHP Amazon MWS Intergration
 ============
+## Now with a better config system (dynamic) and PHP 5.5.14 compatible 
 
 A library to connect to Amazon's Merchant Web Services (MWS) in an object-oriented manner, with a focus on intuitive usage.  
 
@@ -15,7 +16,29 @@ without having to jump hurdles such as parameter URL formatting and token manage
 Here is an example of a function used to get all warehouse-fulfilled orders from Amazon updated in the past 24 hours:
 ```php
 function getAmazonOrders() {
-    $amz = new AmazonOrderList("myStore"); //store name matches the array key in the config file
+    $config = array(
+            'amazon.com' => array(
+                'merchant_id' => '',
+                'marketplace_id' => '', // not needed or used
+                'access_key_id' => '',
+                'secret_key' => '',
+                'service_url' => 'https://mws.amazonservices.ca/',
+                'log_path' => 'logs/amazon.ca/log.txt',
+                'log_funciton' => '',
+                'mute_log' => false
+            ),
+            'amazon.ca' => array(
+                'merchant_id' => '',
+                'marketplace_id' => '', // not needed or used
+                'access_key_id' => '',
+                'secret_key' => '',
+                'service_url' => 'https://mws.amazonservices.com/',
+                'log_path' => 'logs/amazon.com/log.txt',
+                'log_funciton' => '',
+                'mute_log' => false
+            );
+
+    $amz = new AmazonOrderList($store, false, null, $config);
     $amz->setLimits('Modified', "- 24 hours");
     $amz->setFulfillmentChannelFilter("MFN"); //no Amazon-fulfilled orders
     $amz->setOrderStatusFilter(
@@ -26,6 +49,8 @@ function getAmazonOrders() {
     return $amz->getList();
 }
 ```
+
+## NOT TESTED / UPDATED for PHP 5.3.3:
 This example shows a function used to send a previously-created XML feed to Amazon to update Inventory numbers:
 ```php
 function sendInventoryFeed($feed) {
